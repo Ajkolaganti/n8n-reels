@@ -1,0 +1,9 @@
+node_modules/
+.env
+*.log
+public/videos/*.mp4
+.DS_Store
+dist/
+build/
+.remotion/
+*.mp4

@@ -58,6 +58,9 @@ async function renderReel(jobId, reelJobs) {
     serveUrl: bundleLocation,
     id: 'JobsReel',
     inputProps,
+    chromiumOptions: {
+      executablePath: process.env.CHROME_PATH || process.env.PUPPETEER_EXECUTABLE_PATH,
+    },
   });
 
   console.log(`[render] ${jobId} — ${composition.durationInFrames} frames @ ${composition.fps}fps`);
@@ -70,6 +73,10 @@ async function renderReel(jobId, reelJobs) {
     codec: 'h264',
     outputLocation: outputPath,
     inputProps,
+    chromiumOptions: {
+      // Use system Chromium in Docker/Railway environment
+      executablePath: process.env.CHROME_PATH || process.env.PUPPETEER_EXECUTABLE_PATH,
+    },
     onProgress: ({ progress }) => {
       jobs.set(jobId, { ...jobs.get(jobId), progress: Math.round(progress * 100) });
     },

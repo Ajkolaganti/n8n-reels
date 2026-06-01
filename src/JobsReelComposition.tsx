@@ -19,7 +19,7 @@ export const JobsReelComposition: React.FC<JobsReelProps> = ({ jobs }) => {
   let offset = 0;
 
   return (
-    <AbsoluteFill style={{ background: '#0a0a1a' }}>
+    <AbsoluteFill style={{ background: '#0a0a0a' }}>
       {/* Intro */}
       <Sequence from={offset} durationInFrames={INTRO_FRAMES}>
         <IntroSlide totalJobs={validJobs.length} />

@@ -1,115 +1,149 @@
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame, interpolate, Easing } from 'remotion';
 
+const NEON_GREEN = '#B4FF39';
+const DARK_BG = '#0a0a0a';
+
 export const OutroSlide: React.FC = () => {
   const frame = useCurrentFrame();
   const easeOut = Easing.out(Easing.cubic);
-  const easeBack = Easing.out(Easing.back(1.3));
+  const easeBack = Easing.out(Easing.back(1.2));
 
-  const bgOpacity = interpolate(frame, [0, 20], [0, 1], { extrapolateRight: 'clamp' });
+  // CTA button animation
+  const ctaOpacity = interpolate(frame, [0, 25], [0, 1], { extrapolateRight: 'clamp' });
+  const ctaScale = interpolate(frame, [0, 25], [0.8, 1], { extrapolateRight: 'clamp', easing: easeBack });
 
-  const followOpacity = interpolate(frame, [8, 32], [0, 1], { extrapolateRight: 'clamp' });
-  const followY = interpolate(frame, [8, 32], [60, 0], { extrapolateRight: 'clamp', easing: easeOut });
+  // Main text
+  const textOpacity = interpolate(frame, [15, 35], [0, 1], { extrapolateRight: 'clamp' });
+  const textY = interpolate(frame, [15, 35], [50, 0], { extrapolateRight: 'clamp', easing: easeOut });
 
-  const handleOpacity = interpolate(frame, [22, 46], [0, 1], { extrapolateRight: 'clamp' });
-  const handleScale = interpolate(frame, [22, 46], [0.7, 1], { extrapolateRight: 'clamp', easing: easeBack });
+  // Subtitle
+  const subtitleOpacity = interpolate(frame, [30, 50], [0, 1], { extrapolateRight: 'clamp' });
 
-  const badgeOpacity = interpolate(frame, [38, 58], [0, 1], { extrapolateRight: 'clamp' });
-  const badgeScale = interpolate(frame, [38, 58], [0.5, 1], { extrapolateRight: 'clamp', easing: easeBack });
-
-  const tagsOpacity = interpolate(frame, [50, 68], [0, 1], { extrapolateRight: 'clamp' });
-
-  const pulse = Math.sin(frame / 18) * 0.08 + 0.92;
+  // Pulsing glow effect
+  const glowPulse = Math.sin(frame / 15) * 0.1 + 0.9;
 
   return (
-    <AbsoluteFill style={{
-      background: '#0a0a1a',
-      fontFamily: '"Inter", system-ui, sans-serif',
-      overflow: 'hidden',
-      opacity: bgOpacity,
-    }}>
-      {/* Glow background */}
-      <AbsoluteFill>
-        <div style={{
-          position: 'absolute',
-          width: 700, height: 700,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, #4169E130 0%, transparent 65%)',
-          top: '40%', left: '50%',
-          transform: 'translate(-50%, -50%)',
-          scale: String(pulse),
-        }} />
-        <div style={{
-          position: 'absolute',
-          width: 400, height: 400,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, #00d4ff15 0%, transparent 70%)',
-          top: '20%', right: '5%',
-        }} />
-      </AbsoluteFill>
+    <AbsoluteFill style={{ overflow: 'hidden' }}>
+      {/* Dark background */}
+      <AbsoluteFill style={{
+        background: `radial-gradient(ellipse at center, #111111 0%, ${DARK_BG} 70%)`,
+      }} />
 
+      {/* Grid pattern */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage: `
+          linear-gradient(${NEON_GREEN}06 1px, transparent 1px),
+          linear-gradient(90deg, ${NEON_GREEN}06 1px, transparent 1px)
+        `,
+        backgroundSize: '50px 50px',
+        opacity: 0.4,
+      }} />
+
+      {/* Animated glow */}
+      <div style={{
+        position: 'absolute',
+        width: 900, height: 900,
+        borderRadius: '50%',
+        background: `radial-gradient(circle, ${NEON_GREEN}${Math.round(glowPulse * 20).toString(16).padStart(2, '0')} 0%, transparent 70%)`,
+        top: '50%', left: '50%',
+        transform: `translate(-50%, -50%) scale(${glowPulse})`,
+        filter: 'blur(120px)',
+      }} />
+
+      {/* Content */}
       <AbsoluteFill style={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
         justifyContent: 'center',
-        padding: '0 60px',
-        textAlign: 'center',
+        alignItems: 'center',
+        padding: '0 80px',
+        fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif',
       }}>
-        {/* "Follow" label */}
+        {/* Main CTA message */}
         <div style={{
-          opacity: followOpacity,
-          transform: `translateY(${followY}px)`,
-          marginBottom: 20,
+          opacity: textOpacity,
+          transform: `translateY(${textY}px)`,
+          textAlign: 'center',
+          marginBottom: 50,
         }}>
-          <span style={{ fontSize: 52, fontWeight: 500, color: '#718096', letterSpacing: 1 }}>
-            Follow for daily
-          </span>
-        </div>
-
-        {/* "@nextrolenow" */}
-        <div style={{
-          opacity: handleOpacity,
-          transform: `scale(${handleScale})`,
-          marginBottom: 20,
-        }}>
-          <span style={{
-            fontSize: 90,
-            fontWeight: 900,
-            background: 'linear-gradient(90deg, #4169E1, #00d4ff, #4169E1)',
-            backgroundSize: '200% auto',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+          <h1 style={{
+            fontSize: 72,
+            fontWeight: 700,
+            color: '#ffffff',
+            margin: 0,
+            marginBottom: 20,
+            lineHeight: 1.1,
             letterSpacing: -2,
+            fontFamily: '"Playfair Display", Georgia, serif',
           }}>
-            @nextrolenow
-          </span>
+            Ready to
+          </h1>
+          <h1 style={{
+            fontSize: 72,
+            fontWeight: 700,
+            color: '#ffffff',
+            margin: 0,
+            marginBottom: 20,
+            lineHeight: 1.1,
+            letterSpacing: -2,
+            fontFamily: '"Playfair Display", Georgia, serif',
+            fontStyle: 'italic',
+          }}>
+            make your move
+          </h1>
+          <h1 style={{
+            fontSize: 82,
+            fontWeight: 700,
+            color: NEON_GREEN,
+            margin: 0,
+            lineHeight: 1.1,
+            letterSpacing: -2,
+            fontFamily: '"Playfair Display", Georgia, serif',
+          }}>
+            ?
+          </h1>
         </div>
 
-        {/* "NEW JOBS DAILY" badge */}
+        {/* CTA Button */}
         <div style={{
-          opacity: badgeOpacity,
-          transform: `scale(${badgeScale})`,
-          background: 'linear-gradient(135deg, #4169E1, #5580f0)',
-          borderRadius: 50,
-          padding: '18px 52px',
-          marginBottom: 60,
+          opacity: ctaOpacity,
+          transform: `scale(${ctaScale})`,
         }}>
-          <span style={{ color: '#fff', fontSize: 34, fontWeight: 800, letterSpacing: 4 }}>
-            🔥 NEW JOBS DAILY
-          </span>
+          <div style={{
+            background: NEON_GREEN,
+            borderRadius: 50,
+            padding: '24px 60px',
+            cursor: 'pointer',
+            boxShadow: `0 8px 32px ${NEON_GREEN}40`,
+          }}>
+            <span style={{
+              color: DARK_BG,
+              fontSize: 32,
+              fontWeight: 700,
+              letterSpacing: 0.5,
+            }}>
+              LINK IN BIO →
+            </span>
+          </div>
         </div>
 
-        {/* Hashtags */}
-        <div style={{ opacity: tagsOpacity }}>
-          <span style={{
-            fontSize: 26,
-            fontWeight: 400,
-            color: '#4169E180',
-            lineHeight: 1.9,
+        {/* Subtitle */}
+        <div style={{
+          opacity: subtitleOpacity,
+          marginTop: 40,
+        }}>
+          <p style={{
+            fontSize: 22,
+            color: '#666666',
+            margin: 0,
+            letterSpacing: 1,
+            fontWeight: 500,
           }}>
-            #techjobs #hiring #remotejobs #jobsearch #nextrolenow
-          </span>
+            Tap the link to apply • New jobs daily
+          </p>
         </div>
       </AbsoluteFill>
     </AbsoluteFill>

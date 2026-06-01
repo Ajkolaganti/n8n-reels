@@ -2,6 +2,14 @@ import { registerRoot, Composition } from 'remotion';
 import React from 'react';
 import { JobsReelComposition, JobsReelProps, INTRO_FRAMES, JOB_FRAMES, OUTRO_FRAMES } from './JobsReelComposition';
 
+// Load Google Fonts
+import '@fontsource/playfair-display/700.css';
+import '@fontsource/playfair-display/700-italic.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+
 const defaultJobs: JobsReelProps['jobs'] = [
   { heading: 'Senior Engineer @ Google', description: '$180K–$240K | REMOTE | Full-time' },
   { heading: 'Backend Developer @ Stripe', description: '$160K–$210K | HYBRID | Full-time' },

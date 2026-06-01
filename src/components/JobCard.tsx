@@ -69,7 +69,9 @@ export const JobCard: React.FC<JobCardProps> = ({ job, index, total }) => {
 
   return (
     <AbsoluteFill style={{ overflow: 'hidden' }}>
-      {/* Background music - plays throughout (optional - renders without it if missing) */}
+      {/* Background music - disabled until file is added */}
+      {/* Uncomment when you add public/background-music.mp3 */}
+      {/*
       {index === 0 && (
         <Audio 
           src={staticFile('background-music.mp3')} 
@@ -78,6 +80,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job, index, total }) => {
           onError={() => console.log('Background music not found - rendering without audio')}
         />
       )}
+      */}
 
       {/* Main card container */}
       <AbsoluteFill style={{ transform: `translateY(${finalY}px)` }}>

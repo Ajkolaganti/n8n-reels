@@ -83,7 +83,39 @@ async function renderReel(jobId, reelJobs) {
     logLevel: 'error',
   });
 
-  const videoUrl = `${BASE_URL}/videos/${jobId}.mp4`;
+  // Upload to S3 if AWS credentials are available
+  let videoUrl;
+  if (process.env.AWS_ACCESS_KEY_ID) {
+    try {
+      const { S3Client, PutObjectCommand } = await import('@aws-sdk/client-s3');
+      const s3Client = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' });
+      
+      const videoBuffer = await fs.readFile(outputPath);
+      const s3Key = `videos/${jobId}.mp4`;
+      const bucketName = process.env.S3_BUCKET_NAME || 'remotionlambda-useast1-fjanhdsmsk';
+      
+      await s3Client.send(new PutObjectCommand({
+        Bucket: bucketName,
+        Key: s3Key,
+        Body: videoBuffer,
+        ContentType: 'video/mp4',
+        ACL: 'public-read',
+      }));
+      
+      videoUrl = `https://${bucketName}.s3.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/${s3Key}`;
+      console.log(`[render] ${jobId} — uploaded to S3 → ${videoUrl}`);
+      
+      // Delete local file to save disk space
+      await fs.unlink(outputPath).catch(() => {});
+    } catch (err) {
+      console.error(`[render] ${jobId} — S3 upload failed:`, err.message);
+      // Fallback to local URL
+      videoUrl = `${BASE_URL}/videos/${jobId}.mp4`;
+    }
+  } else {
+    videoUrl = `${BASE_URL}/videos/${jobId}.mp4`;
+  }
+
   jobs.set(jobId, {
     status: 'done',
     progress: 100,
